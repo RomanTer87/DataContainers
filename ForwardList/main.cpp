@@ -2,6 +2,10 @@
 using namespace std;
 #define tab "\t"
 #define delimitr "\n---------------------------------------------------------------\n"
+class ForwardList;
+ForwardList operator+(const ForwardList& left, const ForwardList& right);
+
+
 class Element
 {
 	int Data; // значение элемента
@@ -24,6 +28,7 @@ public:
 		cout << "EDestructor:\t" << this << endl;
 	}
 	friend class ForwardList;
+	friend ForwardList operator+(const ForwardList& left, const ForwardList& right);
 };
 class ForwardList
 {
@@ -38,8 +43,13 @@ public:
 	{
 		cout << "LCopyConstructor:\t" << this << endl;
 		// Deep copy:
-		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
-			push_back(Temp->Data);
+		/*for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
+			push_back(Temp->Data);*/
+		*this = other;
+	}
+	ForwardList(ForwardList&& other)	//ForwardList&&  - r - value reference
+	{
+
 	}
 	~ForwardList()
 	{
@@ -49,6 +59,7 @@ public:
 	//					Operators:
 	ForwardList& operator=(const ForwardList& other)
 	{
+		if (this == &other)return *this;
 		while (Head)pop_front();
 		cout << "LCopyAssignment:\t" << this << endl;
 		// Deep copy:
@@ -125,12 +136,23 @@ public:
 		for(Element* Temp = Head; Temp; Temp = Temp->pNext)
 		cout << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
 	}
+	friend ForwardList operator+(const ForwardList& left, const ForwardList& right);
 };
 
+ForwardList operator+(const ForwardList& left, const ForwardList& right)
+{
+	ForwardList cat = left;
+	for (Element* Temp = right.Head; Temp; Temp = Temp->pNext)cat.push_back(Temp->Data);
+	return cat;
+}
+
+//#define BASE_CHECK
+#define OPERATOR_PLUS_CHECK
 
 void main()
 {
 	setlocale(LC_ALL, "");
+#ifdef BASE_CHECK
 	int n;
 	cout << "Введите размер списка: "; cin >> n;
 	ForwardList list;
@@ -142,7 +164,7 @@ void main()
 	cout << delimitr << endl;
 	//list.push_back(123);
 	list.print();
-	
+
 	/*int value;
 	int index;
 	cout << "Введите индекс элемента "; cin >> index;
@@ -156,6 +178,30 @@ void main()
 
 	//ForwardList list2 = list;
 	ForwardList list2;
-	list2 = list;		// CopyAssignment
+	list = list;		// CopyAssignment
+	list.print();
+#endif // BASE_CHECK
+#ifdef OPERATOR_PLUS_CHECK
+
+	ForwardList list1;
+	list1.push_back(3);
+	list1.push_back(5);
+	list1.push_back(8);
+	list1.push_back(13);
+	list1.push_back(21);
+	list1.print();
+
+	ForwardList list2;
+	list2.push_back(34);
+	list2.push_back(55);
+	list2.push_back(89);
 	list2.print();
+
+	ForwardList list3 = list1 + list2;
+	list3.print();
+
+	//ForwardList
+#endif // OPERATOR_PLUS_CHECK
+
+
 }
