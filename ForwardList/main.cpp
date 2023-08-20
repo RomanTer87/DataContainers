@@ -84,7 +84,7 @@ public:
 		Head = nullptr; // Если список пуст, то его голова указывает на 0
 		cout << "LConstructor:\t" << this << endl;
 	}
-	ForwardList(const std::initializer_list<int>& il):ForwardList()
+	ForwardList(const std::initializer_list<int>& il) :ForwardList()
 	{
 		cout << typeid(il.begin()).name() << endl;
 
@@ -93,7 +93,7 @@ public:
 			push_back(*it);
 		}
 	}
-	ForwardList(const ForwardList& other):ForwardList()
+	ForwardList(const ForwardList& other) :ForwardList()
 	{
 		cout << "LCopyConstructor:\t" << this << endl;
 		// Deep copy:
@@ -101,9 +101,11 @@ public:
 			push_back(Temp->Data);*/
 		*this = other;
 	}
-	ForwardList(ForwardList&& other)	//ForwardList&&  - r - value reference
+	ForwardList(ForwardList&& other):ForwardList()	//ForwardList&&  - r - value reference
 	{
-
+		/*this->Head = other.Head;
+		other.Head = nullptr;*/
+		*this = std::move(other);
 	}
 	~ForwardList()
 	{
@@ -119,6 +121,14 @@ public:
 		// Deep copy:
 		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
 			push_back(Temp->Data);
+		return *this;
+	}
+	ForwardList& operator=(ForwardList&& other)
+	{
+		while (Head)pop_front();
+		this->Head = other.Head;
+		other.Head = nullptr;
+		cout << "LMoveAssignment:\t" << this << endl;
 		return *this;
 	}
 
@@ -153,7 +163,7 @@ public:
 	{
 		if (Index == 0)return push_front(Data);
 		Element* Temp = Head;
-		for (int i = 0; i < Index-1; i++)if(Temp->pNext)Temp = Temp->pNext;
+		for (int i = 0; i < Index - 1; i++)if (Temp->pNext)Temp = Temp->pNext;
 		//1) создаем новый элемент
 		Element* New = new Element(Data);
 		// 2)
@@ -165,14 +175,14 @@ public:
 	{
 		if (Index == 0)return pop_front();
 		Element* Temp = Head;
-		for (int i = 0; i < Index-1; i++)
+		for (int i = 0; i < Index - 1; i++)
 			if (Temp->pNext)
 				Temp = Temp->pNext;
 		Element* erased = Temp->pNext;
 		Temp->pNext = Temp->pNext->pNext;
 		delete erased;
 	}
-	
+
 
 	//					Methods:
 
@@ -187,8 +197,8 @@ public:
 		//}
 		//cout << endl;
 		cout << "Head: " << Head << endl;
-		for(Element* Temp = Head; Temp; Temp = Temp->pNext)
-		cout << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
+		for (Element* Temp = Head; Temp; Temp = Temp->pNext)
+			cout << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
 	}
 	friend ForwardList operator+(const ForwardList& left, const ForwardList& right);
 };
@@ -203,7 +213,8 @@ ForwardList operator+(const ForwardList& left, const ForwardList& right)
 //#define BASE_CHECK
 //#define OPERATOR_PLUS_CHECK
 //#define RANGE_BASED_FOR_ARRAY
-#define RANGE_BASED_FOR_LIST
+//#define RANGE_BASED_FOR_LIST
+#define MOVE_SEMANTIC_CHECK
 
 void main()
 {
@@ -283,6 +294,21 @@ void main()
 	cout << endl;
 
 #endif // RANGE_BASED_FOR_LIST
+
+#ifdef MOVE_SEMANTIC_CHECK
+	ForwardList list1 = { 3,5,8,13,21 };
+	for (int i : list1)cout << i << tab; cout << endl;
+	cout << delimitr << endl;
+	ForwardList list2 = { 34,55,89 };
+	for (int i : list2)cout << i << tab; cout << endl;
+
+	//ForwardList list3 = list1 + list2;	//Move constructor
+	cout << delimitr << endl;
+	ForwardList list3;
+	list3 = list1 + list2;
+	for (int i : list3)cout << i << tab; cout << endl;
+
+#endif // MOVE_SEMANTIC_CHECK
 
 
 }
