@@ -105,7 +105,7 @@ public:
 	{
 		/*this->Head = other.Head;
 		other.Head = nullptr;*/
-		*this = std::move(other);
+		*this = std::move(other);		//функция move() принудительно вызывает MoveAssignment для объекта
 	}
 	~ForwardList()
 	{
