@@ -343,6 +343,7 @@ void main()
 		cout << *it << tab;
 	}
 	cout << endl;*/
+
 	for (List<int>::Iterator it = list1.begin(); it != list1.end(); ++it)
 	{
 		(*it) *= 10;
