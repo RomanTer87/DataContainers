@@ -31,8 +31,8 @@ public:
 	{
 		cout << "EDestructor:\t" << this << endl;
 	}
-	template<typename T>friend class ForwardList<T>;
-	template<typename T>friend class Iterator<T>;
+	friend class ForwardList<T>;
+	friend class Iterator<T>;
 	template<typename T>friend ForwardList<T> operator+(const ForwardList<T>& left, const ForwardList<T>& right);
 };
 template<typename T>class Iterator
@@ -204,7 +204,7 @@ public:
 	template<typename T>friend ForwardList<T> operator+(const ForwardList<T>& left, const ForwardList<T>& right);
 };
 
-template<typename T>ForwardList operator+(const ForwardList<T>& left, const ForwardList<T>& right)
+template<typename T>ForwardList<T> operator+(const ForwardList<T>& left, const ForwardList<T>& right)
 {
 	ForwardList<T> cat = left;
 	for (Element<T>* Temp = right.Head; Temp; Temp = Temp->pNext)cat.push_back(Temp->Data);
