@@ -26,6 +26,7 @@ public:
 	Element(T Data, Element<T>* pNext = nullptr) :Data(Data), pNext(pNext)
 	{
 		cout << "EConstructor:\t" << this << endl;
+
 	}
 	~Element()
 	{
