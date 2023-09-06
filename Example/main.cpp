@@ -44,7 +44,7 @@ public:
 		}
 		else
 		{
-			if (Root->pRight == nullptr)Root->pRight = new Element(Data);
+			if (Root->pRight = nullptr)Root->pRight = new Element(Data);
 			else insert(Data, Root->pRight);
 		}
 	}
