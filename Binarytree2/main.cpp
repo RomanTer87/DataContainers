@@ -49,6 +49,26 @@ public:
 		}
 	}
 
+	int minValue(Element* Root)
+	{
+		if (Root == nullptr)return 0;
+		return Root->pLeft == nullptr ? Root->Data : minValue(Root->pLeft);
+		/*if (Root->pLeft == nullptr)return Root->Data;
+		else return minValue(Root->pLeft);*/
+	}
+	int maxValue(Element* Root)
+	{
+		if (Root == nullptr)return 0;
+		return Root->pRight == nullptr ? Root->Data : maxValue(Root->pRight);
+		/*if (Root->pRight == nullptr) return Root->Data;
+		else return maxValue(Root->pRight);*/
+	}
+
+	int Sum(Element* Data)
+	{
+
+	}
+
 	void print(Element* Root)
 	{
 		if (Root == nullptr)return;
@@ -69,5 +89,9 @@ void main()
 		tree.insert(rand() % 100, tree.getRoot());
 	}
 	tree.print(tree.getRoot());
-
+	cout << endl;
+	cout << "Минимальное значение в дереве: " << tree.minValue(tree.getRoot()) << endl;
+	cout << "Максимальное значение в дереве: " << tree.maxValue(tree.getRoot()) << endl;
+	cout << "Сумма элементов дерева:\t\t" << tree.Sum(tree.getRoot()) << endl;
+	cout << "Количество элементов дерева:\t\t" << tree.Count(tree.getRoot()) << endl;
 }
