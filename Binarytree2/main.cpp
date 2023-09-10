@@ -1,4 +1,5 @@
-#include<iostream>
+ï»¿#include<iostream>
+#include<ctime>
 using namespace std;
 using std::cin;
 using std::cout;
@@ -38,7 +39,10 @@ public:
 	}
 	Tree() :Root(nullptr)
 	{
+#ifdef DEBUG
 		cout << "TConstructor:\t" << this << endl;
+#endif // DEBUG
+
 	}
 	Tree(const std::initializer_list<int>& il) : Tree()
 	{
@@ -47,7 +51,9 @@ public:
 	~Tree()
 	{
 		Clear(Root);
+#ifdef DEBUG
 		cout << "TDestructor:\t" << this << endl;
+#endif // DEBUG
 	}
 	void insert(int Data)
 	{
@@ -114,10 +120,10 @@ private:
 	int Depth(Element* Root)const
 	{
 		if (Root == nullptr)return 0;
+		int l_depth = Depth(Root->pLeft) + 1;
+		int r_depth = Depth(Root->pRight) + 1;
 		return 
-			Depth(Root->pLeft) + 1 < Depth(Root->pRight) + 1 ?
-			Depth(Root->pRight) + 1 :
-			Depth(Root->pLeft)+1;
+			l_depth > r_depth ?	l_depth :r_depth;
 	}
 	int Sum(Element* Root)const
 	{
@@ -185,21 +191,55 @@ void main()
 	setlocale(LC_ALL, "");
 #ifdef BASE_CHECK
 	int n;
-	cout << "Ââåäèòå ðàçìåðà äåðåâà: "; cin >> n;
+	cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ñ€Ð°Ð·Ð¼ÐµÑ€Ð° Ð´ÐµÑ€ÐµÐ²Ð°: "; cin >> n;
 	Tree tree;
+	clock_t start = clock();
 	for (int i = 0; i < n; i++)
 	{
 		tree.insert(rand() % 100);
 	}
+	clock_t end = clock();
+	cout << "Ð”ÐµÑ€ÐµÐ²Ð¾ Ð·Ð°Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¾ Ð·Ð° " << double(end - start) / CLOCKS_PER_SEC << "ÑÐµÐºÑƒÐ½Ð´\n";
 	//tree.Clear();
-	tree.print();
+	//tree.print();
 	cout << endl;
-	cout << "Ìèíèìàëüíîå çíà÷åíèå â äåðåâå:  " << tree.minValue() << endl;
-	cout << "Ìàêñèìàëüíîå çíà÷åíèå â äåðåâå: " << tree.maxValue() << endl;
-	cout << "Ñóììà ýëåìåíòîâ äåðåâà:\t\t" << tree.Sum() << endl;
-	cout << "Êîëè÷åñòâî ýëåìåíòîâ äåðåâà:\t" << tree.Count() << endl;
-	cout << "Ñðåäíåå-àðèôìåòè÷åñêîå ýëåìåíòîâ äåðåâà: " << tree.Avg() << endl;
-	cout << "Ãëóáèíà äåðåâà: " << tree.Depth() << endl;
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	cout << "ÐœÐ¸Ð½Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ Ð² Ð´ÐµÑ€ÐµÐ²Ðµ:  ";
+	start = clock();
+	int min = tree.minValue();
+	end = clock();
+	cout << min << ", Ð²Ñ‹Ñ‡Ð¸ÑÐ»ÐµÐ½Ð¾ Ð·Ð° " << double(end - start) / CLOCKS_PER_SEC << " ÑÐµÐºÑƒÐ½Ð´\n";
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	cout << "ÐœÐ°ÐºÑÐ¸Ð¼Ð°Ð»ÑŒÐ½Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ Ð² Ð´ÐµÑ€ÐµÐ²Ðµ: ";
+	start = clock();
+	int max = tree.maxValue();
+	end = clock();
+	cout << max << " Ð²Ñ‹Ñ‡Ð¸ÑÐ»ÐµÐ½Ð¾ Ð·Ð° " << double(end - start) / CLOCKS_PER_SEC << " ÑÐµÐºÑƒÐ½Ð´\n";
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	cout << "Ð¡ÑƒÐ¼Ð¼Ð° ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð¾Ð² Ð´ÐµÑ€ÐµÐ²Ð°:\t\t";
+	start = clock();
+	int sum = tree.Sum();
+	end = clock();
+	cout << sum << " Ð²Ñ‹Ñ‡Ð¸ÑÐ»Ð¸Ð½Ð° Ð·Ð° " << double(end - start) / CLOCKS_PER_SEC << " ÑÐµÐºÑƒÐ½Ð´\n";
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	cout << "ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð¾Ð² Ð´ÐµÑ€ÐµÐ²Ð°:\t";
+	start = clock();
+	int count = tree.Count();
+	end = clock();
+	cout << count << " Ð²Ñ‹Ñ‡Ð¸ÑÐ»Ð¸Ð½Ð¾ Ð·Ð° " << double(end - start) / CLOCKS_PER_SEC << " ÑÐµÐºÑƒÐ½Ð´\n";
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	cout << "Ð¡Ñ€ÐµÐ´Ð½ÐµÐµ-Ð°Ñ€Ð¸Ñ„Ð¼ÐµÑ‚Ð¸Ñ‡ÐµÑÐºÐ¾Ðµ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð¾Ð² Ð´ÐµÑ€ÐµÐ²Ð°: ";
+	start = clock();
+	double avg = tree.Avg();
+	end = clock();
+	cout << avg << " Ð²Ñ‹Ñ‡Ð¸ÑÐ»Ð¸Ð½Ð¾ Ð·Ð° " << double(end - start) / CLOCKS_PER_SEC << " ÑÐµÐºÑƒÐ½Ð´\n";
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	cout << "Ð“Ð»ÑƒÐ±Ð¸Ð½Ð° Ð´ÐµÑ€ÐµÐ²Ð°: ";
+	start = clock();
+	double depth = tree.Depth();
+	end = clock();
+	cout << depth << " Ð²Ñ‹Ñ‡Ð¸ÑÐ»Ð¸Ð½Ð¾ Ð·Ð° " << double(end - start) / CLOCKS_PER_SEC << " ÑÐµÐºÑƒÐ½Ð´\n";
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	UniqueTree u_tree;
 	for (int i = 0; i < n; i++)
@@ -208,18 +248,18 @@ void main()
 	}
 	u_tree.print();
 	cout << endl;
-	cout << "Ìèíèìàëüíîå çíà÷åíèå â äåðåâå:  " << u_tree.minValue() << endl;
-	cout << "Ìàêñèìàëüíîå çíà÷åíèå â äåðåâå: " << u_tree.maxValue() << endl;
-	cout << "Ñóììà ýëåìåíòîâ äåðåâà:\t\t" << u_tree.Sum() << endl;
-	cout << "Êîëè÷åñòâî ýëåìåíòîâ äåðåâà:\t" << u_tree.Count() << endl;
-	cout << "Ñðåäíåå-àðèôìåòè÷åñêîå ýëåìåíòîâ äåðåâà: " << u_tree.Avg() << endl;
-	cout << "Ãëóáèíà äåðåâà: " << u_tree.Depth() << endl;
+	cout << "ÐœÐ¸Ð½Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ Ð² Ð´ÐµÑ€ÐµÐ²Ðµ:  " << u_tree.minValue() << endl;
+	cout << "ÐœÐ°ÐºÑÐ¸Ð¼Ð°Ð»ÑŒÐ½Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ Ð² Ð´ÐµÑ€ÐµÐ²Ðµ: " << u_tree.maxValue() << endl;
+	cout << "Ð¡ÑƒÐ¼Ð¼Ð° ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð¾Ð² Ð´ÐµÑ€ÐµÐ²Ð°:\t\t" << u_tree.Sum() << endl;
+	cout << "ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð¾Ð² Ð´ÐµÑ€ÐµÐ²Ð°:\t" << u_tree.Count() << endl;
+	cout << "Ð¡Ñ€ÐµÐ´Ð½ÐµÐµ-Ð°Ñ€Ð¸Ñ„Ð¼ÐµÑ‚Ð¸Ñ‡ÐµÑÐºÐ¾Ðµ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð¾Ð² Ð´ÐµÑ€ÐµÐ²Ð°: " << u_tree.Avg() << endl;
+	cout << "Ð“Ð»ÑƒÐ±Ð¸Ð½Ð° Ð´ÐµÑ€ÐµÐ²Ð°: " << u_tree.Depth() << endl;
 #endif // BASE_CHECK
 
 #ifdef DEPTH_CHECK
-	Tree tree = { 50,25,75,16,32,64,90,28 };
+	Tree tree = { 50,25,75,16,32,64,90,28,29};
 	tree.print();
-	cout << "Ãëóáèíà äåðåâà: " << tree.Depth() << endl;
+	cout << "Ð“Ð»ÑƒÐ±Ð¸Ð½Ð° Ð´ÐµÑ€ÐµÐ²Ð°: " << tree.Depth() << endl;
 #endif // DEPTH_CHECK
 
 
