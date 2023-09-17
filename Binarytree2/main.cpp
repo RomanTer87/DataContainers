@@ -76,9 +76,9 @@ public:
 	{
 		return Count(Root);
 	}
-	int Depth()const
+	int depth()const
 	{
-		return Depth(Root);
+		return depth(Root);
 	}
 	double Avg()const
 	{
@@ -96,6 +96,10 @@ public:
 	{
 		print(Root);
 		cout << endl;
+	}
+	void depth_print(int depth)const
+	{
+		depth_print(Root, depth);
 	}
 private:
 	void insert(int Data, Element* Root)
@@ -148,11 +152,11 @@ private:
 		Clear(Root->pRight);
 		delete Root;
 	}
-	int Depth(Element* Root)const
+	int depth(Element* Root)const
 	{
 		if (Root == nullptr)return 0;
-		int l_depth = Depth(Root->pLeft) + 1;
-		int r_depth = Depth(Root->pRight) + 1;
+		int l_depth = depth(Root->pLeft) + 1;
+		int r_depth = depth(Root->pRight) + 1;
 		return 
 			l_depth > r_depth ?	l_depth :r_depth;
 	}
@@ -187,6 +191,15 @@ private:
 		print(Root->pLeft);
 		cout << Root->Data << "\t";
 		print(Root->pRight);
+	}
+
+	void depth_print(Element* Root, int depth)const
+	{
+		// adjusted_depth - заданная глубина
+		if (Root == nullptr)return;
+		if (depth == 0)cout << Root->Data << "\t";
+		depth_print(Root->pLeft, depth-1);
+		depth_print(Root->pRight, depth-1);
 	}
 };
 
@@ -223,9 +236,9 @@ template<typename T>void measure(const char* massage, const Tree& tree, T(Tree::
 	cout << value << " Выполнено за " << double(end - start) / CLOCKS_PER_SEC << " секунд.\n";
 }
 
-#define BASE_CHECK
+//#define BASE_CHECK
 //#define OLD_PREFORMANCE_CHECK
-//#define DEPTH_CHECK
+#define DEPTH_CHECK
 
 void main()
 {
@@ -311,12 +324,16 @@ void main()
 #ifdef DEPTH_CHECK
 	Tree tree = { 50,25,75,16,32,64,90,28,29};
 	tree.print();
-	cout << "Глубина дерева: " << tree.Depth() << endl;
+	cout << "Глубина дерева: " << tree.depth() << endl;
 #endif // DEPTH_CHECK
-	int value;
+	/*int value;
 	cout << "Введите удаляемое значение: "; cin >> value;
 	tree.erase(value);
-	tree.print();
+	tree.print();*/
+
+	int depth;
+	cout << "Введите глубину дерева: "; cin >> depth;
+	tree.depth_print(depth);
 
 
 }
